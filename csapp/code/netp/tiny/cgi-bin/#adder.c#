@@ -18,6 +18,7 @@ int main(void) {
 	n1 = atoi(arg1);
 	n2 = atoi(arg2);
     }
+    
 
     /* Make the response body */
     sprintf(content, "Welcome to Racheli's adding site: ");
