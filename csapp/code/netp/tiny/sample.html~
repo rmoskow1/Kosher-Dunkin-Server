@@ -1,0 +1,14 @@
+<html>
+<head><title>test</title></head>
+<body> 
+  <h1>Adina and Tali's Dictionary</h1>
+  <p>
+    Please enter a word that you would like defined.
+  <form action="/cgi-bin/regex" method="get">
+    word: <input name="zipcode" type="text">
+    <input type="submit" value="Give me My Dunkin!">
+  </form>
+  </p>
+    
+</body>
+</html>
