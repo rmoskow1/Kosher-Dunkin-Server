@@ -21,39 +21,24 @@ int MAXLINE = 7000;
     printf("%s%c%c\n","Content-Type:text/plain;charset=iso-8859-1",13,10);
     /*Read zipcode environment variable, store it in zip*/
     if ((buf = getenv("QUERY_STRING")) != NULL) {
-      p = strchr(buf,'&');
-      *p= '\0';
-      strcpy(arg1,buf);
-      strcpy(zip, atoi(arg1)); /*This is the zipcode, environment variable*/
-      
+   
       /*check to make sure the submission was actually a zipcode*/
       regex_t regex;
-      int reti = regcomp(&regex,"^[0-9]{5}$",REG_EXTENDED); /*should match 5 numbers exactly*/
-      reti = regexec(&regex, zip, 0, NULL,0);
+      int reti = regcomp(&regex,"^zipcode=[0-9]{5}$",REG_EXTENDED); /*should match 5 numbers exactly*/
+      reti = regexec(&regex, buf, 0, NULL,0);
       if(reti!=0){
-	printf("This doesn't work. Please try again with a Kosher (i.e.valid) Zipcode!\n");
+	printf("This fake %s doesn't work. Please try again with a Kosher (i.e.valid) Zipcode!\n",buf);
 	return(0);
       }
+      /*now, we can set zip, the proper zipcode environemt*/
+      strncpy(zip,buf+8,5);
     }
     
     /*Create the two pieces of the full url. This request to the mapquest api will return all of the dunkin donuts in the 25 mile radius vacinity.*/
-    /*"http://www.mapquestapi.com/search/v2/radius?callback=jQuery1112013032576308156107_1514930541467&key=Gmjtd%7Clu6t2luan5%252C72%253Do5-larsq&origin=11516&units=m&maxMatches=30&radius=25&hostedData=mqap.33454_DunkinDonuts&ambiguities=ignore&_=1514930541469\"*/
-    /*  char url1[700] = "http://www.mapquestapi.com/search/v2/radius?callback=jQuery1112013032576308156107_1514930541467&key=Gmjtd%7Clu6t2luan5%252C72%253Do5-larsq&origin=";
-    char url2[700] = "&units=m&maxMatches=30&radius=25&hostedData=mqap.33454_DunkinDonuts&ambiguities=ignore&_=1514930541469\\";
-    
-    /*Concatenate to create the full url*/
-    /*  char command[7] = "curl ";
-    strcpy(full_url, command);
-    strcpy(full_url, url1);
-    strcat(full_url, zip);
-    strcat(full_url, url2);
-    strcat(full_url, " > result");
-    printf("\n , %s\n",full_url);
-    
 
     /*Retrieve JSON response from the url, and place it in a file, result*/
     char url1[600] = "\"http://www.mapquestapi.com/search/v2/radius?callback=jQuery1112013032576308156107_1514930541467&key=Gmjtd%7Clu6t2luan5%252C72%253Do5-larsq&origin=";
-  char url2[600] = "&units=m&maxMatches=30&radius=25&hostedData=mqap.33454_DunkinDonuts&ambiguities=ignore&_=1514930541469\" >result2";
+  char url2[600] = "&units=m&maxMatches=30&radius=25&hostedData=mqap.33454_DunkinDonuts&ambiguities=ignore&_=1514930541469\" > best_result";
   char command[100] = "curl ";
   strcpy(full_url, command);
   strcat(full_url, url1);
@@ -67,7 +52,8 @@ int MAXLINE = 7000;
     int retval = 0;
     regex_t re;
     regmatch_t rm[2];
-    const char *filename = "./result2";
+    /*this file will hold the JSON response for parsing*/
+    const char *filename = "./best_result";
     
     /*Compile the regex for searching for the kosher Dunkin Donuts*/
     if (regcomp(&re, tofind, REG_EXTENDED) != 0)
@@ -94,6 +80,8 @@ int MAXLINE = 7000;
 	  fprintf(stdout,"The address of the closest Kosher Dunkin Donuts store location is: %.*s\n", (int)(rm[1].rm_eo - rm[1].rm_so), line + rm[1].rm_so);
 	  fprintf(stdout,"Enjoy the kosh!");
 	  fflush(stdout);
+	  /* printf("Content-type: image/jpeg\n\n");
+	     printf("<img src=\"dunkin.jpg\" alt=\"Flowers in Chania\">");*/
 	  return EXIT_SUCCESS;
 	}
     }
@@ -101,6 +89,5 @@ int MAXLINE = 7000;
     fprintf(stdout,"Unfortunately, there are no Kosher Dunkin Donuts in your vacinity. Please move!");
     fflush(stdout);
     return(0);
-/*sprintf(empty,"I love to partay!");*/
     return EXIT_SUCCESS;
 }
