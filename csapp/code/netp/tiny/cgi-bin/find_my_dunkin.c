@@ -80,8 +80,6 @@ int MAXLINE = 7000;
 	  fprintf(stdout,"The address of the closest Kosher Dunkin Donuts store location is: %.*s\n", (int)(rm[1].rm_eo - rm[1].rm_so), line + rm[1].rm_so);
 	  fprintf(stdout,"Enjoy the kosh!");
 	  fflush(stdout);
-	  /* printf("Content-type: image/jpeg\n\n");
-	     printf("<img src=\"dunkin.jpg\" alt=\"Flowers in Chania\">");*/
 	  return EXIT_SUCCESS;
 	}
     }
