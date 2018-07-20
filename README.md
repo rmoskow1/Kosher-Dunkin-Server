@@ -1,2 +1,2 @@
-# Systems_Project
-A program for the end of the semester project
+# Kosher Dunkin Server
+Systems project to access Dunkin Donuts' MapQuest query and return closest kosher facility
